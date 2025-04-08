@@ -12,14 +12,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if(!CheckPerms()){
+        if(!checkPerms()){
             ActivityCompat.requestPermissions(
                 this, RequiredPerms, 0
             )
         }
     }
 
-    private fun CheckPerms(): Boolean {
+    private fun checkPerms(): Boolean {
         return RequiredPerms.all{
             ContextCompat.checkSelfPermission(
                 applicationContext, it
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.BLUETOOTH,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
     }
 }
