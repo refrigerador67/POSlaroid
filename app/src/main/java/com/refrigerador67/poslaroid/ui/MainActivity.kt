@@ -10,7 +10,6 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.refrigerador67.poslaroid.R
 import com.refrigerador67.poslaroid.databinding.ActivityMainBinding
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -22,14 +21,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
+        // Camera housekeeping
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        if(!checkPerms()){
+        if(!checkPerms()){ // If all the perms are not granted, requests the permissions
             ActivityCompat.requestPermissions(
                 this, RequiredPerms, 0
             )
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    // Check if the permissions are allowed, returning false if permissions are missing
     private fun checkPerms(): Boolean {
         return RequiredPerms.all{
             ContextCompat.checkSelfPermission(
@@ -51,11 +49,12 @@ class MainActivity : AppCompatActivity() {
     private fun startCamera(){
         val processCameraProvider = ProcessCameraProvider.getInstance(this)
         processCameraProvider.addListener({
+
             val cameraProvider: ProcessCameraProvider = processCameraProvider.get()
-            val previewUseCase = Preview.Builder().build().also { it.setSurfaceProvider (binding.viewFinder.surfaceProvider) }
+            val previewUseCase = Preview.Builder().build().also { it.surfaceProvider = binding.viewFinder.surfaceProvider }
 
             try {
-                Log.i("POSlaroid", "Starting camera")
+                Log.i("@string/app_name", "Starting camera")
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     this,
@@ -63,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                     previewUseCase
                 )
             }catch(exc:Exception){
-                Log.e("POSlaroid", "Unable to bind use case", exc)
+                Log.e("@string/app_name", "Unable to bind use case", exc)
 
             }
         }, ContextCompat.getMainExecutor(this))
@@ -77,7 +76,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private val RequiredPerms = arrayOf(
             Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
             Manifest.permission.BLUETOOTH,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
