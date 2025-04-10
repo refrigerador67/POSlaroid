@@ -3,15 +3,11 @@ package com.refrigerador67.poslaroid.ui
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.activity.compose.setContent
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.CameraController
-import androidx.camera.view.LifecycleCameraController
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.refrigerador67.poslaroid.R
@@ -21,12 +17,15 @@ import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
     private lateinit var cameraExecutor: ExecutorService
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -38,9 +37,8 @@ class MainActivity : AppCompatActivity() {
         }else{
             startCamera()
         }
-
-
     }
+
 
     private fun checkPerms(): Boolean {
         return RequiredPerms.all{
@@ -56,8 +54,18 @@ class MainActivity : AppCompatActivity() {
             val cameraProvider: ProcessCameraProvider = processCameraProvider.get()
             val previewUseCase = Preview.Builder().build().also { it.setSurfaceProvider (binding.viewFinder.surfaceProvider) }
 
-            cameraProvider.unbindAll()
-            cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA, previewUseCase)
+            try {
+                Log.i("POSlaroid", "Starting camera")
+                cameraProvider.unbindAll()
+                cameraProvider.bindToLifecycle(
+                    this,
+                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    previewUseCase
+                )
+            }catch(exc:Exception){
+                Log.e("POSlaroid", "Unable to bind use case", exc)
+
+            }
         }, ContextCompat.getMainExecutor(this))
     }
 

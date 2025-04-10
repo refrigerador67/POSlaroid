@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.media3.common.ktx)
     val camerax_version = "1.4.0"
 
     implementation(libs.material)
