@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+    <androidx.camera.view.PreviewView
+        android:id="@+id/viewFinder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+    </androidx.camera.view.PreviewView>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -55,10 +64,10 @@
         android:backgroundTint="#00FFFFFF"
         android:cropToPadding="false"
         android:scaleType="fitCenter"
-        android:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar"
-        app:srcCompat="@drawable/settings_24px" />
+        app:srcCompat="@drawable/settings_24px"
+        app:tint="#FFFFFF" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
