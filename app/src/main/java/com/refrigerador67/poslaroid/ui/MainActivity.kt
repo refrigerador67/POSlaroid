@@ -1,8 +1,10 @@
 package com.refrigerador67.poslaroid.ui
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
@@ -35,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         }else{
             startCamera()
         }
+
+        binding.settingsButton.setOnClickListener {openSettings()}
     }
 
     // Check if the permissions are allowed, returning false if permissions are missing
@@ -66,6 +70,14 @@ class MainActivity : AppCompatActivity() {
 
             }
         }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun openSettings(){
+        val settingsIntent = Intent(
+            this,
+            SettingsActivity::class.java
+        )
+        startActivity(settingsIntent)
     }
 
     override fun onDestroy() {

@@ -23,11 +23,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.POSlaroid"
-        tools:targetApi="31">
+        tools:targetApi="26">
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.POSlaroid">
+            android:theme="@style/Base.Theme.POSlaroid.camera">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
