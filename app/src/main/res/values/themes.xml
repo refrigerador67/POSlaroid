@@ -3,11 +3,13 @@
 
     <style name="Theme.POSlaroid" parent="android:Theme.Material.Light" />
     <!-- Base application theme. -->
-    <style name="Base.Theme.POSlaroid.camera" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <style name="Base.Theme.POSlaroid.camera" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryVariant">@color/black</item>
     </style>
 
-    <style name="Base.Theme.POSlaroid" parent="Theme.Material3.Light">
+    <style name="Base.Theme.POSlaroid" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/teal_700</item>
+        <item name="colorPrimaryVariant">@color/teal_dark</item>
     </style>
 </resources>
