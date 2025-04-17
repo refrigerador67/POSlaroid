@@ -123,14 +123,11 @@ class MainActivity : AppCompatActivity() {
 
         val imageCapture = imageCapture ?: return
 
-        // Get current date and time and convert it into a neat format :)
-        val time = Calendar.getInstance().time
-        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val dateTime = formatter.format(time)
+        val dateTime = dateTime()
 
         // Set the filename and location
         val fileName = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, dateTime.toString())
+            put(MediaStore.MediaColumns.DISPLAY_NAME, dateTime)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
             if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                 put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/POSlaroid")
@@ -154,13 +151,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults){
+                    binding.cameraStateText.text = getResources().getString(R.string.printing_picture)
                     val inputStream: InputStream = context.contentResolver.openInputStream(output.savedUri ?: return) ?: return
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     inputStream.close()
-
-                    binding.cameraStateText.text = getResources().getString(R.string.processing_picture)
                     printPhoto(bitmap)
-                    binding.cameraStateLayout.visibility = View.INVISIBLE
+
                 }
             }
         )
@@ -173,7 +169,6 @@ class MainActivity : AppCompatActivity() {
         val grayscaleBitmap = toGrayscale(resizedBitmap)
         val ditheredBitmap = floydSteinbergDithering(grayscaleBitmap)
 
-        binding.cameraStateText.text = getResources().getString(R.string.printing_picture)
         // Building string for EscPosPrinter
         val text = StringBuilder()
         for (y in 0 until ditheredBitmap.height step 32) {
@@ -184,9 +179,19 @@ class MainActivity : AppCompatActivity() {
 
         connection?.connect()
 
-        printer?.printFormattedText(text.toString())
+        printer?.printFormattedText( "$text[L]\n[L]<b>${dateTime()}</b>")
 
         connection?.disconnect()
+        binding.cameraStateLayout.visibility = View.INVISIBLE
+    }
+
+    private fun dateTime():String{
+        // Get current date and time and convert it into a neat format :)
+        val time = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val dateTime = formatter.format(time)
+
+        return dateTime
     }
 
     // Open Settings button handler
