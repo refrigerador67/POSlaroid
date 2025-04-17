@@ -2,6 +2,11 @@
     <string name="app_name">POSlaroid</string>
     <!-- Strings used for fragments for navigation -->
 
+    <string name="taking_picture">Taking Picture</string>
+    <string name="picture_error">Unable to take picture</string>
+    <string name="processing_picture">Processing…</string>
+    <string name="printing_picture">Printing…</string>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
