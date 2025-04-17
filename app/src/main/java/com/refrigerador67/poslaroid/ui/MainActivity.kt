@@ -1,18 +1,30 @@
 package com.refrigerador67.poslaroid.ui
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.refrigerador67.poslaroid.databinding.ActivityMainBinding
+import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -20,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var binding: ActivityMainBinding
+    private var imageCapture: ImageCapture? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.settingsButton.setOnClickListener {openSettings()}
+        binding.takePicture.setOnClickListener {takePhoto()}
     }
 
     // Check if the permissions are allowed, returning false if permissions are missing
@@ -50,12 +64,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+    // Camera Preview
     private fun startCamera(){
         val processCameraProvider = ProcessCameraProvider.getInstance(this)
         processCameraProvider.addListener({
 
             val cameraProvider: ProcessCameraProvider = processCameraProvider.get()
             val previewUseCase = Preview.Builder().build().also { it.surfaceProvider = binding.viewFinder.surfaceProvider }
+
+            imageCapture = ImageCapture.Builder()
+                .build()
 
             try {
                 Log.i("@string/app_name", "Starting camera")
@@ -72,6 +91,46 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+    private fun takePhoto() {
+        binding.cameraStateLayout.visibility = View.VISIBLE
+
+        val imageCapture = imageCapture ?: return
+        val dateTime = Calendar.getInstance().time
+
+        val fileName = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, dateTime.toString())
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/POSlaroid")
+        }
+
+        val outputOptions = ImageCapture.OutputFileOptions
+            .Builder(contentResolver,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                fileName)
+            .build()
+        val context = this
+
+
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exc: ImageCaptureException) {
+                    binding.cameraStateText.text = "Unable to take Picture"
+                }
+
+                override fun onImageSaved(output: ImageCapture.OutputFileResults){
+                    binding.cameraStateLayout.visibility = View.INVISIBLE
+
+                    val inputStream: InputStream = context.contentResolver.openInputStream(output.savedUri ?: return) ?: return
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    inputStream.close()
+                }
+            }
+        )
+    }
+
+    // Open Settings button handler
     private fun openSettings(){
         val settingsIntent = Intent(
             this,

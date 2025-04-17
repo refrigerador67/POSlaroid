@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/takePicture"
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="0dp"
         android:layout_height="128dp"
@@ -70,27 +70,34 @@
         app:srcCompat="@drawable/settings_24px"
         app:tint="#FFFFFF" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/textView2"
+    <LinearLayout
+        android:id="@+id/cameraStateLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="camera_state"
-        android:textColor="@android:color/white"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:text="camera_state" />
+        android:visibility="invisible">
+
+        <ProgressBar
+            android:id="@+id/cameraStateProgress"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/white" />
+
+        <TextView
+            android:id="@+id/cameraStateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:text="camera_state"
+            android:textColor="@android:color/white"
+            tools:text="camera_state" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
