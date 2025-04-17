@@ -4,6 +4,7 @@
 
     <string name="taking_picture">Taking Picture</string>
     <string name="picture_error">Unable to take picture</string>
+    <string name="printer_error">Error connecting to printer</string>
     <string name="processing_picture">Processing…</string>
     <string name="printing_picture">Printing…</string>
 

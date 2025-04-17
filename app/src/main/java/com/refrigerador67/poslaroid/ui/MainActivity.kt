@@ -60,7 +60,14 @@ class MainActivity : AppCompatActivity() {
             startCamera()
         }
 
-        connection = BluetoothPrintersConnections.selectFirstPaired() // Connect to first paired bluetooth printer
+        try {
+            connection =
+                BluetoothPrintersConnections.selectFirstPaired() // Connect to first paired bluetooth printer
+        }
+        catch(exc: Exception){
+            Toast.makeText(baseContext, getResources().getString(R.string.printer_error) + exc.toString(), Toast.LENGTH_SHORT).show()
+
+        }
         if (connection == null){
             Toast.makeText(baseContext, "No printer paired", Toast.LENGTH_SHORT).show()
         }
@@ -201,7 +208,6 @@ class MainActivity : AppCompatActivity() {
         private val RequiredPerms = mutableListOf(
             Manifest.permission.CAMERA,
             Manifest.permission.BLUETOOTH,
-            Manifest.permission.BLUETOOTH_ADMIN,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
         ).apply { if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R){
         add(Manifest.permission.BLUETOOTH_CONNECT)}
