@@ -11,4 +11,8 @@
 
 ## Requirements
 - **Android 5+ with Camera2API**
+- **Bluetooth thermal printer**
   
+## Special Thanks
+- Gzalo for the original POSlaroid proyect (https://github.com/gzalo/poslaroid)
+- DantSU for the EscPOS printer library (https://github.com/DantSu/ESCPOS-ThermalPrinter-Android)
