@@ -125,7 +125,9 @@ class MainActivity : AppCompatActivity() {
         val fileName = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, dateTime.toString())
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/POSlaroid")
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/POSlaroid")
+            }
         }
 
         val outputOptions = ImageCapture.OutputFileOptions
