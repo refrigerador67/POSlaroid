@@ -1,6 +1,7 @@
 package com.refrigerador67.poslaroid.ui
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,6 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.refrigerador67.poslaroid.databinding.ActivityMainBinding
 import java.io.InputStream
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -87,11 +89,15 @@ class MainActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun takePhoto() {
         binding.cameraStateLayout.visibility = View.VISIBLE
 
         val imageCapture = imageCapture ?: return
-        val dateTime = Calendar.getInstance().time
+        val time = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val dateTime = formatter.format(time)
+
 
         val fileName = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, dateTime.toString())
