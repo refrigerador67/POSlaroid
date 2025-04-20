@@ -47,15 +47,15 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="general_header">General</string>
+    <string name="example_header">Example</string>
 
-    <!-- Messages Preferences -->
+    <!-- General Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
+    <string name="flip_frontal_camera">Flip frontal camera</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>

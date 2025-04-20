@@ -3,6 +3,7 @@ package com.refrigerador67.poslaroid.ui
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -29,6 +30,7 @@ import java.util.Calendar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.core.graphics.scale
+import androidx.preference.SwitchPreferenceCompat
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
@@ -43,8 +45,12 @@ class MainActivity : AppCompatActivity() {
     private var printer: EscPosPrinter? = null
     private var connection: BluetoothConnection? = null
 
+    private var activeCamera = CameraSelector.DEFAULT_BACK_CAMERA
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         // Camera housekeeping
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -76,6 +82,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.settingsButton.setOnClickListener {openSettings()}
         binding.takePicture.setOnClickListener {takePhoto()}
+        binding.switchCameraButton.setOnClickListener {switchCamera()}
     }
 
     // Check if the permissions are allowed, returning false if permissions are missing
@@ -99,12 +106,21 @@ class MainActivity : AppCompatActivity() {
             imageCapture = ImageCapture.Builder()
                 .build()
 
+            val sharedPrefs = getSharedPreferences("", Context.MODE_PRIVATE)
+            val isCameraFlipped = sharedPrefs.getBoolean("flipCameraToggle", true)
+
+            if(isCameraFlipped){
+                binding.viewFinder.scaleX = -1f
+            }else{
+                binding.viewFinder.scaleX = 1f
+            }
+
             try {
                 Log.i("@string/app_name", "Starting camera")
                 cameraProvider.unbindAll()
                 cameraProvider.bindToLifecycle(
                     this,
-                    CameraSelector.DEFAULT_BACK_CAMERA,
+                    activeCamera,
                     previewUseCase,
                     imageCapture
                 )
@@ -203,6 +219,17 @@ class MainActivity : AppCompatActivity() {
         startActivity(settingsIntent)
     }
 
+    private fun switchCamera(){
+        when (activeCamera){
+            CameraSelector.DEFAULT_BACK_CAMERA -> {
+                activeCamera = CameraSelector.DEFAULT_FRONT_CAMERA
+            }
+            CameraSelector.DEFAULT_FRONT_CAMERA -> {
+                activeCamera = CameraSelector.DEFAULT_BACK_CAMERA
+            }
+        }
+        startCamera()
+    }
 
     override fun onDestroy() {
         super.onDestroy()
