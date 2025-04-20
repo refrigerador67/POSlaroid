@@ -19,17 +19,17 @@
 
     </androidx.camera.view.PreviewView>
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:alpha="0.5"
-        android:background="@color/black"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:backgroundTint="#6B000000"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
-        android:visibility="visible"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
@@ -38,10 +38,10 @@
         android:layout_marginStart="16dp"
         android:text="@string/app_name"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
-        app:layout_constraintStart_toStartOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbar"
+        app:layout_constraintStart_toStartOf="@+id/materialToolbar"
+        app:layout_constraintTop_toTopOf="@+id/viewFinder" />
 
     <ImageButton
         android:id="@+id/takePicture"
@@ -68,9 +68,9 @@
         style="@android:style/Widget.Material.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="6dp"
         android:adjustViewBounds="false"
         android:backgroundTint="#00000000"
         android:backgroundTintMode="src_in"
@@ -79,12 +79,35 @@
         android:focusable="true"
         android:padding="8dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/viewFinder"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/settings_24px"
         app:tint="#FFFFFF"
         tools:srcCompat="@drawable/settings_24px" />
+
+    <ImageButton
+        android:id="@+id/custTextButton"
+        style="@android:style/Widget.Material.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="6dp"
+        android:adjustViewBounds="false"
+        android:backgroundTint="#00000000"
+        android:backgroundTintMode="src_in"
+        android:clickable="true"
+        android:contentDescription="Settings"
+        android:focusable="true"
+        android:padding="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/materialToolbar"
+        app:layout_constraintEnd_toStartOf="@+id/settingsButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_edit_note_24"
+        app:tint="#FFFFFF"
+        tools:srcCompat="@drawable/baseline_edit_note_24" />
 
     <LinearLayout
         android:id="@+id/cameraStateLayout"
@@ -92,9 +115,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:visibility="invisible">
+        app:layout_constraintTop_toBottomOf="@+id/materialToolbar">
 
         <ProgressBar
             android:id="@+id/cameraStateProgress"
