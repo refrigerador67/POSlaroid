@@ -11,8 +11,11 @@
         android:id="@+id/viewFinder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="146dp"
-        tools:layout_editor_absoluteY="-16dp">
+        android:background="#979797"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
     </androidx.camera.view.PreviewView>
 
@@ -42,33 +45,46 @@
 
     <ImageButton
         android:id="@+id/takePicture"
-        style="@style/Widget.AppCompat.ImageButton"
+        style="@android:style/Widget.DeviceDefault.Light.ImageButton"
         android:layout_width="0dp"
-        android:layout_height="128dp"
+        android:layout_height="140dp"
         android:adjustViewBounds="false"
-        android:background="#000000"
-        android:backgroundTint="#54050505"
+        android:backgroundTint="#85121212"
+        android:backgroundTintMode="src_in"
+        android:clickable="true"
+        android:contentDescription="Take Photo"
+        android:focusable="true"
         android:padding="24dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/photo_camera_24px"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        tools:srcCompat="@drawable/photo_camera_24px" />
 
     <ImageButton
         android:id="@+id/settingsButton"
-        style="@android:style/Widget.DeviceDefault.ImageButton"
-        android:layout_width="58dp"
+        style="@android:style/Widget.Material.ImageButton"
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:backgroundTint="#00FFFFFF"
-        android:cropToPadding="false"
-        android:scaleType="fitCenter"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:adjustViewBounds="false"
+        android:backgroundTint="#00000000"
+        android:backgroundTintMode="src_in"
+        android:clickable="true"
+        android:contentDescription="Settings"
+        android:focusable="true"
+        android:padding="8dp"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toolbar"
+        app:layout_constraintTop_toTopOf="@+id/viewFinder"
         app:srcCompat="@drawable/settings_24px"
-        app:tint="#FFFFFF" />
+        app:tint="#FFFFFF"
+        tools:srcCompat="@drawable/settings_24px" />
 
     <LinearLayout
         android:id="@+id/cameraStateLayout"
