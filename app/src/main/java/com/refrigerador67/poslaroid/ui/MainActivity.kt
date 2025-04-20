@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -22,6 +23,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import com.refrigerador67.poslaroid.R
 import com.refrigerador67.poslaroid.databinding.ActivityMainBinding
 import java.io.InputStream
@@ -30,7 +32,6 @@ import java.util.Calendar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import androidx.core.graphics.scale
-import androidx.preference.SwitchPreferenceCompat
 import com.dantsu.escposprinter.EscPosPrinter
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
 import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var connection: BluetoothConnection? = null
 
     private var activeCamera = CameraSelector.DEFAULT_BACK_CAMERA
+    private var flashMode = ImageCapture.FLASH_MODE_OFF
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +85,7 @@ class MainActivity : AppCompatActivity() {
         binding.settingsButton.setOnClickListener {openSettings()}
         binding.takePicture.setOnClickListener {takePhoto()}
         binding.switchCameraButton.setOnClickListener {switchCamera()}
+        binding.flashButton.setOnClickListener {toggleFlash()}
     }
 
     // Check if the permissions are allowed, returning false if permissions are missing
@@ -108,12 +111,8 @@ class MainActivity : AppCompatActivity() {
 
             val sharedPrefs = getSharedPreferences("", Context.MODE_PRIVATE)
             val isCameraFlipped = sharedPrefs.getBoolean("flipCameraToggle", true)
+            Log.i("@string/app_name", isCameraFlipped.toString())
 
-            if(isCameraFlipped){
-                binding.viewFinder.scaleX = -1f
-            }else{
-                binding.viewFinder.scaleX = 1f
-            }
 
             try {
                 Log.i("@string/app_name", "Starting camera")
@@ -201,6 +200,21 @@ class MainActivity : AppCompatActivity() {
         binding.cameraStateLayout.visibility = View.INVISIBLE
     }
 
+    private fun toggleFlash() {
+        when (flashMode) {
+            ImageCapture.FLASH_MODE_OFF -> {
+                flashMode = ImageCapture.FLASH_MODE_ON;
+                binding.flashButton.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.baseline_flash_on_24))
+            }
+            ImageCapture.FLASH_MODE_ON -> {
+                flashMode = ImageCapture.FLASH_MODE_OFF
+                binding.flashButton.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.baseline_flash_off_24))
+            }
+        }
+
+        imageCapture?.flashMode = flashMode;
+    }
+
     private fun dateTime():String{
         // Get current date and time and convert it into a neat format :)
         val time = Calendar.getInstance().time
@@ -223,9 +237,11 @@ class MainActivity : AppCompatActivity() {
         when (activeCamera){
             CameraSelector.DEFAULT_BACK_CAMERA -> {
                 activeCamera = CameraSelector.DEFAULT_FRONT_CAMERA
+                binding.flashButton.visibility = View.INVISIBLE
             }
             CameraSelector.DEFAULT_FRONT_CAMERA -> {
                 activeCamera = CameraSelector.DEFAULT_BACK_CAMERA
+                binding.flashButton.visibility = View.VISIBLE
             }
         }
         startCamera()
