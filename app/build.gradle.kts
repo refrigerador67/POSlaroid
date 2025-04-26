@@ -76,5 +76,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("com.google.zxing:core:3.4.0")
+    implementation ("org.nanohttpd:nanohttpd:2.3.1")
+
 
 }
