@@ -1,4 +1,4 @@
-package com.refrigerador67.poslaroid
+package com.refrigerador67.poslaroid.ui
 
 import android.content.Context
 import android.graphics.Bitmap
