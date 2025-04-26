@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Poslaroid Web Print</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .upload-form {
+            border: 2px dashed #444;
+            background-color: #2c2c2c;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #preview {
+            max-width: 100%;
+            margin-top: 20px;
+            border: 1px solid #444;
+            border-radius: 4px;
+        }
+        .text-input {
+            background-color: #333;
+            color: #e0e0e0;
+            width: 80%;
+            max-width: 400px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #555;
+            border-radius: 4px;
+        }
+        .text-help {
+            font-size: 12px;
+            color: #999;
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Poslaroid Web Print</h1>
+    <div class="upload-form">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="imageInput" accept="image/*" style="display: none">
+            <label for="imageInput" class="button">Select Image</label>
+            <br>
+            <input type="text" id="customText" class="text-input" 
+                placeholder="[L]<b><font size='tall'>bogos</font></b>" 
+                name="text" value="[L]<b><font size='tall'>bogos</font></b>">
+            <div class="text-help">Enter the text to be printed with the image</div>
+            <br>
+            <img id="preview" style="display: none">
+            <br>
+            <button type="submit" class="button" style="background-color: #008CBA">Print Image</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('imageInput').onchange = function(e) {
+            const preview = document.getElementById('preview');
+            preview.style.display = 'block';
+            preview.src = URL.createObjectURL(e.target.files[0]);
+        };
+
+        document.getElementById('uploadForm').onsubmit = function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('image', document.getElementById('imageInput').files[0]);
+            const customText = document.getElementById('customText').value || document.getElementById('customText').placeholder;
+            formData.append('text', customText);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => alert(result))
+            .catch(error => alert('Error: ' + error));
+        };
+    </script>
+</body>
+</html>
