@@ -48,14 +48,19 @@
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>
+    <string name="webserver_header">Web Printing</string>
     <string name="example_header">Example</string>
 
     <!-- General Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
     <string name="flip_frontal_camera">Flip frontal camera</string>
 
-    <!-- Sync Preferences -->
+    <!-- Webserver Preferences -->
+    <string name="webserver_toggle">Enable web printing</string>
+    <string name="webserver_port">Custom web printing port</string>
+
+    <!-- Example Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>

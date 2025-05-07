@@ -3,15 +3,32 @@
 
     <PreferenceCategory app:title="@string/general_header">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
         <SwitchPreferenceCompat
             app:key="flipCameraToggle"
             app:persistent="true"
             app:title="@string/flip_frontal_camera" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:title="@string/webserver_header">
+
+        <SwitchPreferenceCompat
+            app:key="webServerToggle"
+            app:persistent="true"
+            app:title="@string/webserver_toggle" />
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="webServerPort"
+            app:title="@string/webserver_port"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/example_header">
+
         <ListPreference
             app:defaultValue="reply"
             app:entries="@array/reply_entries"
@@ -19,16 +36,6 @@
             app:key="reply"
             app:title="@string/reply_title"
             app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/example_header">
-
-        <SwitchPreferenceCompat
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
 
     </PreferenceCategory>
 
