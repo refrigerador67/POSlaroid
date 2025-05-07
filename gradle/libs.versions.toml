@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.1"
+core = "3.4.0"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -11,6 +12,7 @@ composeBom = "2024.09.00"
 material = "1.10.0"
 appcompat = "1.7.0"
 constraintlayout = "2.2.1"
+nanohttpd = "2.3.1"
 navigationFragmentKtx = "2.6.0"
 navigationUiKtx = "2.6.0"
 activity = "1.10.1"
@@ -19,6 +21,7 @@ preference = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+core = { module = "com.google.zxing:core", version.ref = "core" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -40,6 +43,7 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-media3-common-ktx = { group = "androidx.media3", name = "media3-common-ktx", version.ref = "media3CommonKtx" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+nanohttpd = { module = "org.nanohttpd:nanohttpd", version.ref = "nanohttpd" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
