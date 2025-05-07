@@ -5,12 +5,14 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -23,7 +25,13 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
+import androidx.core.content.edit
+import androidx.core.graphics.scale
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
+import com.dantsu.escposprinter.EscPosPrinter
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
+import com.dantsu.escposprinter.textparser.PrinterTextParserImg
 import com.refrigerador67.poslaroid.R
 import com.refrigerador67.poslaroid.databinding.ActivityMainBinding
 import java.io.InputStream
@@ -31,11 +39,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import androidx.core.graphics.scale
-import com.dantsu.escposprinter.EscPosPrinter
-import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
-import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
-import com.dantsu.escposprinter.textparser.PrinterTextParserImg
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,15 +52,20 @@ class MainActivity : AppCompatActivity() {
     private var activeCamera = CameraSelector.DEFAULT_BACK_CAMERA
     private var flashMode = ImageCapture.FLASH_MODE_OFF
 
+    private val sharedPreferences by lazy {getDefaultSharedPreferences(this)}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
 
         // Camera housekeeping
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         cameraExecutor = Executors.newSingleThreadExecutor()
+
+        if(sharedPreferences.getInt("flashMode", 0) == 1) {
+            toggleFlash()
+
+        }
 
         if(!checkPerms()){ // If all the perms are not granted, requests the permissions
             ActivityCompat.requestPermissions(
@@ -96,8 +104,6 @@ class MainActivity : AppCompatActivity() {
             ) == PackageManager.PERMISSION_GRANTED
         }
     }
-
-
     // Camera Preview
     private fun startCamera(){
         val processCameraProvider = ProcessCameraProvider.getInstance(this)
@@ -108,11 +114,6 @@ class MainActivity : AppCompatActivity() {
 
             imageCapture = ImageCapture.Builder()
                 .build()
-
-            val sharedPrefs = getSharedPreferences("", Context.MODE_PRIVATE)
-            val isCameraFlipped = sharedPrefs.getBoolean("flipCameraToggle", true)
-            Log.i("@string/app_name", isCameraFlipped.toString())
-
 
             try {
                 Log.i("@string/app_name", "Starting camera")
@@ -205,6 +206,7 @@ class MainActivity : AppCompatActivity() {
             ImageCapture.FLASH_MODE_OFF -> {
                 flashMode = ImageCapture.FLASH_MODE_ON;
                 binding.flashButton.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.baseline_flash_on_24))
+
             }
             ImageCapture.FLASH_MODE_ON -> {
                 flashMode = ImageCapture.FLASH_MODE_OFF
@@ -250,6 +252,11 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        sharedPreferences.edit() { putInt("flashMode", flashMode) }
     }
 
     companion object {
