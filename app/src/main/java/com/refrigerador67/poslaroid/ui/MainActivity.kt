@@ -2,17 +2,17 @@ package com.refrigerador67.poslaroid.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -24,6 +24,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.graphics.scale
@@ -54,6 +55,8 @@ class MainActivity : AppCompatActivity() {
 
     private val sharedPreferences by lazy {getDefaultSharedPreferences(this)}
 
+    private val webServerIntent by lazy { Intent(this, WebServerService::class.java) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,7 +67,29 @@ class MainActivity : AppCompatActivity() {
 
         if(sharedPreferences.getInt("flashMode", 0) == 1) {
             toggleFlash()
+        }
+        if(sharedPreferences.getBoolean("webServerToggle", false)){
 
+            val notificationManager: NotificationManager = getSystemService(
+                NOTIFICATION_SERVICE
+            ) as NotificationManager
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel("WebServer", "WebServer", NotificationManager.IMPORTANCE_DEFAULT)
+                // Register the channel with the system
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            val notification: Notification = NotificationCompat.Builder(this, "WebServer")
+                .setContentTitle("POSlaroid")
+                .setContentText("WebServer is running")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setOngoing(true)
+                .build()
+
+            notificationManager.notify(1, notification)
+
+            startService(webServerIntent)
         }
 
         if(!checkPerms()){ // If all the perms are not granted, requests the permissions
@@ -75,20 +100,6 @@ class MainActivity : AppCompatActivity() {
         }else{
             startCamera()
         }
-
-        try {
-            connection =
-                BluetoothPrintersConnections.selectFirstPaired() // Connect to first paired bluetooth printer
-        }
-        catch(exc: Exception){
-            Toast.makeText(baseContext, getResources().getString(R.string.printer_error) + exc.toString(), Toast.LENGTH_SHORT).show()
-
-        }
-        if (connection == null){
-            Toast.makeText(baseContext, "No printer paired", Toast.LENGTH_SHORT).show()
-        }
-        // Set printer dimensions
-        printer = EscPosPrinter(connection, 203, 48f, 32)
 
         binding.settingsButton.setOnClickListener {openSettings()}
         binding.takePicture.setOnClickListener {takePhoto()}
@@ -172,18 +183,36 @@ class MainActivity : AppCompatActivity() {
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     inputStream.close()
                     printPhoto(bitmap)
-
+                    binding.cameraStateLayout.visibility = View.INVISIBLE
                 }
             }
         )
     }
 
-    private fun printPhoto(bitmap: Bitmap) {
+    fun printPhoto(bitmap: Bitmap) {
+
+        // Connect to Printer
+        try {
+            connection =
+                BluetoothPrintersConnections.selectFirstPaired() // Connect to first paired bluetooth printer
+        }
+        catch(exc: Exception){
+            Toast.makeText(baseContext, getResources().getString(R.string.printer_error) + exc.toString(), Toast.LENGTH_SHORT).show()
+
+        }
+        if (connection == null){
+            Toast.makeText(baseContext, "No printer paired", Toast.LENGTH_SHORT).show()
+        }
+
+        // Set printer dimensions
+        printer = EscPosPrinter(connection, 203, 48f, 32)
 
         // Processing
         val resizedBitmap = bitmap.scale(384, (384 * bitmap.height / bitmap.width.toFloat()).toInt())
         val grayscaleBitmap = toGrayscale(resizedBitmap)
         val ditheredBitmap = floydSteinbergDithering(grayscaleBitmap)
+
+        Log.i("@string/app_name", "Image Processed" + ditheredBitmap)
 
         // Building string for EscPosPrinter
         val text = StringBuilder()
@@ -198,7 +227,6 @@ class MainActivity : AppCompatActivity() {
         printer?.printFormattedText( "$text[L]\n[L]<b>${dateTime()}</b>")
 
         connection?.disconnect()
-        binding.cameraStateLayout.visibility = View.INVISIBLE
     }
 
     private fun toggleFlash() {
@@ -251,6 +279,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+
+        val notificationManager: NotificationManager = getSystemService(
+            NOTIFICATION_SERVICE
+        ) as NotificationManager
+
+        notificationManager.cancel(1)
+
+        stopService(webServerIntent)
         cameraExecutor.shutdown()
     }
 
@@ -265,7 +301,11 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.BLUETOOTH,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
         ).apply { if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R){
-        add(Manifest.permission.BLUETOOTH_CONNECT)}
+        add(Manifest.permission.BLUETOOTH_CONNECT)
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU){
+            add(Manifest.permission.POST_NOTIFICATIONS)
+        }
+        }
         }
     }
 }

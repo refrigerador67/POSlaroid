@@ -1,29 +1,56 @@
 package com.refrigerador67.poslaroid.ui
 
+import android.app.Service
 import android.content.Context
-import android.graphics.Bitmap
+import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import fi.iki.elonen.NanoHTTPD
+import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.util.concurrent.atomic.AtomicInteger
+import com.dantsu.escposprinter.EscPosPrinter
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
+import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
+import com.dantsu.escposprinter.textparser.PrinterTextParserImg
 
-class WebServerManager private constructor(
+class WebServerService : Service(){
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun onCreate() {
+        WebServerManager(this, 8080).start()
+        super.onCreate()
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        TODO("Not yet implemented")
+    }
+
+}
+
+class WebServerManager (
     private val context: Context,
     initialPort: Int,
-    private val onPrintRequest: (Bitmap, String?) -> Unit
 ) : NanoHTTPD(initialPort) {
 
     private val currentPort = AtomicInteger(initialPort)
     private var isRunning = false
+    private val sharedPreferences by lazy { getDefaultSharedPreferences(context) }
+
+    private var mActivity: MainActivity = MainActivity()
 
     companion object {
         private const val TAG = "WebServerManager"
-        private const val DEFAULT_PORT = 8080
         private const val MAX_PORT_ATTEMPTS = 10
         private const val PORT_INCREMENT = 1
 
-        @Volatile
+        /*
         private var instance: WebServerManager? = null
 
         fun getInstance(
@@ -32,9 +59,11 @@ class WebServerManager private constructor(
             onPrintRequest: (Bitmap, String?) -> Unit
         ): WebServerManager {
             return instance ?: synchronized(this) {
-                instance ?: WebServerManager(context, port, onPrintRequest).also { instance = it }
+                instance ?: WebServerManager(context, port).also { instance = it }
             }
         }
+
+         */
     }
 
     override fun serve(session: IHTTPSession): Response {
@@ -69,11 +98,12 @@ class WebServerManager private constructor(
             
             val tempFile = files["image"]
             val customText = session.parameters["text"]?.get(0)
-            
+
+
             if (tempFile != null) {
                 val bitmap = BitmapFactory.decodeFile(tempFile)
                 if (bitmap != null) {
-                    onPrintRequest(bitmap, customText)
+                    mActivity.printPhoto(bitmap)
                     return newFixedLengthResponse("Image received and printing started")
                 }
             }
@@ -108,6 +138,7 @@ class WebServerManager private constructor(
                 started = true
                 isRunning = true
                 Log.i(TAG, "Server started successfully on port ${currentPort.get()}")
+                Toast.makeText(context, "Starting Web Server", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Log.w(TAG, "Failed to start server on port ${currentPort.get()}, trying next port", e)
                 currentPort.addAndGet(PORT_INCREMENT)
@@ -116,6 +147,7 @@ class WebServerManager private constructor(
         }
 
         if (!started) {
+            Toast.makeText(context, "Failed to start server after $MAX_PORT_ATTEMPTS attempts", Toast.LENGTH_SHORT).show()
             throw IllegalStateException("Failed to start server after $MAX_PORT_ATTEMPTS attempts")
         }
     }
@@ -135,7 +167,7 @@ class WebServerManager private constructor(
                 val addresses = networkInterface.inetAddresses
                 while (addresses.hasMoreElements()) {
                     val address = addresses.nextElement()
-                    if (!address.isLoopbackAddress && address is java.net.Inet4Address) {
+                    if (!address.isLoopbackAddress && address is Inet4Address) {
                         return address.hostAddress
                     }
                 }
@@ -149,6 +181,8 @@ class WebServerManager private constructor(
     fun getCurrentPort(): Int = currentPort.get()
 
     fun isServerRunning(): Boolean = isRunning
+
+
 
     fun changePort(newPort: Int): Boolean {
         if (isRunning) {

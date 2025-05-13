@@ -22,7 +22,13 @@
         <EditTextPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            app:defaultValue="8080"
+            app:enableCopying="false"
+            app:enabled="false"
             app:key="webServerPort"
+            app:selectable="false"
             app:title="@string/webserver_port"
             app:useSimpleSummaryProvider="true" />
 
