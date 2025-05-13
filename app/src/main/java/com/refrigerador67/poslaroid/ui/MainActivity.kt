@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             val notification: Notification = NotificationCompat.Builder(this, "WebServer")
                 .setContentTitle("POSlaroid")
                 .setContentText("WebServer is running")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setOngoing(true)
                 .build()
 
