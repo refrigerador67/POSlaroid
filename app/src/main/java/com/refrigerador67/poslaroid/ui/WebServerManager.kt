@@ -12,10 +12,6 @@ import fi.iki.elonen.NanoHTTPD
 import java.net.Inet4Address
 import java.net.NetworkInterface
 import java.util.concurrent.atomic.AtomicInteger
-import com.dantsu.escposprinter.EscPosPrinter
-import com.dantsu.escposprinter.connection.bluetooth.BluetoothConnection
-import com.dantsu.escposprinter.connection.bluetooth.BluetoothPrintersConnections
-import com.dantsu.escposprinter.textparser.PrinterTextParserImg
 
 class WebServerService : Service(){
 
