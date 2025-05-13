@@ -18,6 +18,7 @@
         <SwitchPreferenceCompat
             app:key="webServerToggle"
             app:persistent="true"
+            app:summary="Takes effect after a relaunch"
             app:title="@string/webserver_toggle" />
         <EditTextPreference
             android:layout_width="wrap_content"
