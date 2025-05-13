@@ -182,14 +182,14 @@ class MainActivity : AppCompatActivity() {
                     val inputStream: InputStream = context.contentResolver.openInputStream(output.savedUri ?: return) ?: return
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     inputStream.close()
-                    printPhoto(bitmap)
+                    printPhoto(bitmap, "")
                     binding.cameraStateLayout.visibility = View.INVISIBLE
                 }
             }
         )
     }
 
-    fun printPhoto(bitmap: Bitmap) {
+    fun printPhoto(bitmap: Bitmap, customText: String) {
 
         // Connect to Printer
         try {
@@ -212,7 +212,14 @@ class MainActivity : AppCompatActivity() {
         val grayscaleBitmap = toGrayscale(resizedBitmap)
         val ditheredBitmap = floydSteinbergDithering(grayscaleBitmap)
 
-        Log.i("@string/app_name", "Image Processed" + ditheredBitmap)
+        // Custom Text handling
+
+        var printedText = "\n" + "[L]<b>${dateTime()}</b>"
+
+        if(customText != ""){
+           printedText = customText
+        }
+
 
         // Building string for EscPosPrinter
         val text = StringBuilder()
@@ -224,7 +231,7 @@ class MainActivity : AppCompatActivity() {
 
         connection?.connect()
 
-        printer?.printFormattedText( "$text[L]\n[L]<b>${dateTime()}</b>")
+        printer?.printFormattedText("$text[L]$printedText")
 
         connection?.disconnect()
     }
