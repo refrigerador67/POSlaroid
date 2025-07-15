@@ -9,6 +9,37 @@
             app:title="@string/flip_frontal_camera" />
 
     </PreferenceCategory>
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:title="@string/customtext_header">
+
+        <SwitchPreferenceCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="customTextToggle"
+            app:persistent="true"
+            app:title="@string/customtext_toggle" />
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:enableCopying="false"
+            app:enabled="true"
+            app:key="customText"
+            app:selectable="true"
+            app:title="@string/customtext"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:defaultValue="disable"
+            app:entries="@array/timestamp_entries"
+            app:entryValues="@array/timestamp_values"
+            app:key="timestamp"
+            app:title="@string/timestamp"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:layout_width="wrap_content"
@@ -38,8 +69,8 @@
 
         <ListPreference
             app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
+            app:entries="@array/timestamp_entries"
+            app:entryValues="@array/timestamp_values"
             app:key="reply"
             app:title="@string/reply_title"
             app:useSimpleSummaryProvider="true" />

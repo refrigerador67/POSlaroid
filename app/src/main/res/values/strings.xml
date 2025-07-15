@@ -48,11 +48,17 @@
 
     <!-- Preference Titles -->
     <string name="general_header">General</string>
+    <string name="customtext_header">Custom Text</string>
     <string name="webserver_header">Web Printing</string>
     <string name="example_header">Example</string>
 
     <!-- General Preferences -->
     <string name="flip_frontal_camera">Flip frontal camera</string>
+
+    <!-- Custom text Preferences -->
+    <string name="customtext_toggle">Add custom text</string>
+    <string name="customtext">Custom text</string>
+    <string name="timestamp">Timestamp</string>
 
     <!-- Webserver Preferences -->
     <string name="webserver_toggle">Enable web printing</string>
