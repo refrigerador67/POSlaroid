@@ -214,12 +214,7 @@ class MainActivity : AppCompatActivity() {
 
         // Custom Text handling
 
-        var printedText = "\n" + "[L]<b>${dateTime()}</b>"
-
-        if(customText != ""){
-           printedText = customText
-        }
-
+        val printedText = textHandler()
 
         // Building string for EscPosPrinter
         val text = StringBuilder()
@@ -259,6 +254,29 @@ class MainActivity : AppCompatActivity() {
         val dateTime = formatter.format(time)
 
         return dateTime
+    }
+
+    private fun textHandler():String{
+
+        var text = "[L]<b> </b>\n" // Blank bold character is used to ensure that printer is at max... power?
+        var customText = ""
+
+        if(sharedPreferences.getBoolean("customTextToggle", false)){
+            customText = sharedPreferences.getString("customText", "").toString()
+        }
+        when (sharedPreferences.getString("timestamp", "disable")){
+            "aboveText" -> {
+                text += "[L]<b>${dateTime()}</b>\n[L]${customText}"
+            }
+            "belowText" -> {
+                text += "[L]${customText}\n[L]<b>${dateTime()}</b>"
+            }
+            "disable" -> {
+                text += "[L]${customText}"
+            }
+        }
+
+        return text
     }
 
     // Open Settings button handler
