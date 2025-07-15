@@ -11,7 +11,6 @@
 ## Planned Features
 - **Importing Pictures from Gallery**
 - **Exposure Control**
-- **Custom text from main UI**
 
 ## Requirements
 - **Android 5+ with Camera2API**
