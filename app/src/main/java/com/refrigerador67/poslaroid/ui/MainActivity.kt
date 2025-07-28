@@ -182,14 +182,14 @@ class MainActivity : AppCompatActivity() {
                     val inputStream: InputStream = context.contentResolver.openInputStream(output.savedUri ?: return) ?: return
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     inputStream.close()
-                    printPhoto(bitmap, "")
+                    printPhoto(bitmap, "",false)
                     binding.cameraStateLayout.visibility = View.INVISIBLE
                 }
             }
         )
     }
 
-    fun printPhoto(bitmap: Bitmap, customText: String) {
+    fun printPhoto(bitmap: Bitmap, customText: String, fromWebServer: Boolean) {
 
         // Connect to Printer
         try {
@@ -214,7 +214,9 @@ class MainActivity : AppCompatActivity() {
 
         // Custom Text handling
 
-        val printedText = textHandler()
+        var printedText = "" // Set default printedText to empty
+
+        printedText = if(fromWebServer) {customText}else{textHandler()} // Set custom depending on where the function is called
 
         // Building string for EscPosPrinter
         val text = StringBuilder()

@@ -99,7 +99,7 @@ class WebServerManager (
             if (tempFile != null) {
                 val bitmap = BitmapFactory.decodeFile(tempFile)
                 if (bitmap != null) {
-                    mActivity.printPhoto(bitmap, customText.toString())
+                    mActivity.printPhoto(bitmap, customText.toString(), true)
                     return newFixedLengthResponse("Image received and printing started")
                 }
             }
