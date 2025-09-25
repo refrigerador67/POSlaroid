@@ -7,6 +7,14 @@
             app:key="flipCameraToggle"
             app:persistent="true"
             app:title="@string/flip_frontal_camera" />
+        <SwitchPreferenceCompat
+            android:id="@+id/switchPreferenceCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:defaultValue="true"
+            app:key="savePhoto"
+            app:persistent="true"
+            app:title="@string/photo_saving" />
 
     </PreferenceCategory>
     <PreferenceCategory
