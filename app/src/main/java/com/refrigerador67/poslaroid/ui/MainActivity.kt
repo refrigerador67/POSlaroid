@@ -66,9 +66,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        if(sharedPreferences.getInt("flashMode", 0) == 1) {
-            toggleFlash()
-        }
         if(sharedPreferences.getBoolean("webServerToggle", false)){
 
             val notificationManager: NotificationManager = getSystemService(
@@ -100,6 +97,10 @@ class MainActivity : AppCompatActivity() {
             startCamera()
         }else{
             startCamera()
+        }
+
+        if(sharedPreferences.getInt("flashMode", 0) == 1) {
+            toggleFlash()
         }
 
         binding.settingsButton.setOnClickListener {openSettings()}
