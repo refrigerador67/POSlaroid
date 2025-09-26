@@ -64,4 +64,10 @@
     <!-- Webserver Preferences -->
     <string name="webserver_toggle">Enable web printing</string>
     <string name="webserver_port">Custom web printing port</string>
+
+    <!-- Copies Preferences -->
+    <string name="copiesSetting">No. of copies</string>
+    <string name="copiesTitle">Printing copies</string>
+    <string name="copiesPositive">Next</string>
+    <string name="copiesNegative">Skip</string>
 </resources>

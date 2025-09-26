@@ -2,6 +2,7 @@ package com.refrigerador67.poslaroid.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -182,7 +183,23 @@ class MainActivity : AppCompatActivity() {
                     val inputStream: InputStream = context.contentResolver.openInputStream(output.savedUri ?: return) ?: return
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     inputStream.close()
-                    printPhoto(bitmap, "",false)
+                    sharedPreferences.getString("numberCopies", "1")?.toInt()?.let {
+                        if (it > 1) {
+                            for (i in 1..it) {
+                                val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+                                builder
+                                    .setTitle(getString(R.string.copiesTitle))
+                                    .setPositiveButton(getString(R.string.copiesPositive)) { dialog, which ->
+                                        printPhoto(bitmap, "", false)
+                                    }
+                                    .setNegativeButton(getString(R.string.copiesNegative)) { dialog, which ->
+
+                                    }
+                                val dialog: AlertDialog = builder.create()
+                                dialog.show()
+                            }
+                        } else { printPhoto(bitmap, "",false) }
+                    }
                     binding.cameraStateLayout.visibility = View.INVISIBLE
                 }
             }
@@ -236,7 +253,7 @@ class MainActivity : AppCompatActivity() {
     private fun toggleFlash() {
         when (flashMode) {
             ImageCapture.FLASH_MODE_OFF -> {
-                flashMode = ImageCapture.FLASH_MODE_ON;
+                flashMode = ImageCapture.FLASH_MODE_ON
                 binding.flashButton.setImageDrawable(AppCompatResources.getDrawable(this,R.drawable.baseline_flash_on_24))
 
             }
@@ -246,7 +263,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        imageCapture?.flashMode = flashMode;
+        imageCapture?.flashMode = flashMode
     }
 
     private fun dateTime():String{
@@ -319,7 +336,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        sharedPreferences.edit() { putInt("flashMode", flashMode) }
+        sharedPreferences.edit { putInt("flashMode", flashMode) }
     }
 
     companion object {

@@ -15,6 +15,16 @@
             app:key="savePhoto"
             app:persistent="true"
             app:title="@string/photo_saving" />
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:digits="0123456789"
+            android:inputType="numberDecimal"
+            app:defaultValue="1"
+            app:enableCopying="false"
+            app:key="numberCopies"
+            app:title="@string/copiesSetting"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
     <PreferenceCategory

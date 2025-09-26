@@ -11,4 +11,17 @@
         <item>aboveText</item>
         <item>belowText</item>
     </string-array>
+
+    <!-- Copies Preference -->
+    <string-array name="copies_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="copies_values">
+        <item>disable</item>
+        <item>aboveText</item>
+        <item>belowText</item>
+    </string-array>
 </resources>
